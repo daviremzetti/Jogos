@@ -3,7 +3,10 @@ package com.myproject.view;
 import com.myproject.advinhapalavra.JogoDaForca;
 import com.myproject.util.ConferirChute;
 import com.myproject.util.ValidacaoMaximoCaracter;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,7 +40,13 @@ public class Tela extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        ImageIcon icon = new ImageIcon(getClass().getResource("/fundo.jpg"));
+        final Image image = icon.getImage();
+        jPanel1 = new javax.swing.JPanel(){
+            public void paintComponent(Graphics g){
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            };
+        };
         jLayeredPane1 = new javax.swing.JLayeredPane();
         LbPalavra = new javax.swing.JLabel();
         TfChute = new javax.swing.JTextField();
