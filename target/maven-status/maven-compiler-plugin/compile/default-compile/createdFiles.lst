@@ -1,9 +1,10 @@
-com\myproject\advinhapalavra\JogoDaForca.class
 com\myproject\util\ValidacaoMaximoCaracter.class
+com\myproject\advinhapalavra\DefinirTentativas.class
 com\myproject\view\Tela$4.class
 com\myproject\view\Tela.class
 com\myproject\advinhapalavra\AdvinhaPalavra.class
 com\myproject\view\Tela$2.class
+com\myproject\advinhapalavra\SortearPalavra.class
 com\myproject\util\ConferirChute.class
 com\myproject\view\Tela$1.class
 com\myproject\view\Tela$3.class

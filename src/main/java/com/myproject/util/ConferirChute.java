@@ -1,20 +1,29 @@
 package com.myproject.util;
 
-import com.myproject.advinhapalavra.JogoDaForca;
+import com.myproject.view.Tela;
 
 /**
  *
  * @author biancamarques
  */
 public class ConferirChute {
+    
+    private String palavraSecreta;
+    private Tela tela;
 
-    public static void conferir(String chute) {
+    public boolean conferir(String chute) {
         char chuteChar = chute.charAt(0);
-        for (int i = 0; i < JogoDaForca.getPalavraSecreta().length(); i++) {
-            char letra = JogoDaForca.getPalavraSecreta().charAt(i);
+        boolean acertou = false;
+        for (int i = 0; i < palavraSecreta.length(); i++) {
+            char letra = palavraSecreta.charAt(i);
             if (letra == chuteChar) {
-                JogoDaForca.listaAcertos.set(i, chute);
+                acertou = true;
             }
         }
+        return acertou;
+    }
+    
+    public void setPalavraSecreta(String palavra){
+        this.palavraSecreta = palavra;
     }
 }

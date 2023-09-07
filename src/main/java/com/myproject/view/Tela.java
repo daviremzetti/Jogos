@@ -1,6 +1,7 @@
 package com.myproject.view;
 
-import com.myproject.advinhapalavra.JogoDaForca;
+import com.myproject.advinhapalavra.DefinirTentativas;
+import com.myproject.advinhapalavra.SortearPalavra;
 import com.myproject.util.ConferirChute;
 import com.myproject.util.ValidacaoMaximoCaracter;
 import java.awt.Graphics;
@@ -13,11 +14,15 @@ import javax.swing.JOptionPane;
  *
  * @author biancamarques
  */
-public class Tela extends javax.swing.JFrame {
+public final class Tela extends javax.swing.JFrame {
 
     int chutes = 1;
     int numeroTentativas;
-    ArrayList<String> lista = JogoDaForca.lista;
+    String palavraSecreta;
+    String palavraOculta;
+    public static ArrayList<String> listaAcertos = new ArrayList<>();
+    ConferirChute conferirChute = new ConferirChute();
+    String mensagem;
 
     /**
      * Creates new form Tela
@@ -25,9 +30,11 @@ public class Tela extends javax.swing.JFrame {
     public Tela() {
         initComponents();
         TfChute.setDocument(new ValidacaoMaximoCaracter(1));
-        JogoDaForca forca = new JogoDaForca();
-        forca.sortearPalavra();
-        numeroTentativas = forca.definirNumeroTentativas();
+        palavraSecreta = SortearPalavra.executarSorteio();
+        numeroTentativas = DefinirTentativas.definirNumeroTentativas(palavraSecreta);
+        conferirChute.setPalavraSecreta(palavraSecreta);
+        palavraOculta = "_ ".repeat(palavraSecreta.length());
+        listaAcertoInicial();
         setarLabels();
     }
 
@@ -144,25 +151,62 @@ public class Tela extends javax.swing.JFrame {
 
     private void TfChuteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TfChuteKeyReleased
         String chute = TfChute.getText().toUpperCase();
-        ConferirChute.conferir(chute);
+        boolean acertou = conferirChute.conferir(chute);
+        if (acertou) {
+            inserirLetraNaPalavraOculta(chute);
+        }
         setarLabels();
         limparTextField();
-        if (chutes >= numeroTentativas && JogoDaForca.listaAcertos.contains("_ ")) {
-            JOptionPane.showMessageDialog(null, "Você perdeu. A palavra secreta era " + JogoDaForca.getPalavraSecreta());
+        if (chutes >= numeroTentativas && palavraOculta.matches(".*_.*")) {
+            mensagem = "Você perdeu. A palavra secreta era " + palavraSecreta;
+            fimJogo();
         }
-        if (chutes < numeroTentativas && !JogoDaForca.listaAcertos.contains("_ ")) {
-            JOptionPane.showMessageDialog(null, "PARABÉNS, VOCÊ VENCEU");
+        if (chutes < numeroTentativas && !palavraOculta.matches(".*_.*")) {
+            mensagem = "PARABÉNS, VOCÊ VENCEU";
+            fimJogo();
         }
         chutes = chutes + 1;
+
+
     }//GEN-LAST:event_TfChuteKeyReleased
+
+    private void fimJogo() {
+        int opcao = JOptionPane.showConfirmDialog(null, mensagem + "\nDeseja jogar novamente?", "FIM DE JOGO", JOptionPane.YES_NO_OPTION);
+        if (opcao == 0) {
+            Tela tela = new Tela();
+            this.setVisible(false);
+            tela.setVisible(true);
+        } else {
+            System.exit(0);
+        }
+    }
 
     private void limparTextField() {
         TfChute.setText("");
     }
 
+    private void inserirLetraNaPalavraOculta(String chute) {
+        char chuteChar = chute.charAt(0);
+        for (int i = 0; i < palavraSecreta.length(); i++) {
+            if (chuteChar == palavraSecreta.charAt(i)) {
+                listaAcertos.set(i, chute);
+            }
+        }
+        palavraOculta = "";
+
+        for (int i = 0; i < palavraSecreta.length(); i++) {
+            palavraOculta = palavraOculta + listaAcertos.get(i);
+        }
+    }
+
+    public void listaAcertoInicial() {
+        for (int i = 0; i < palavraOculta.length(); i++) {
+            listaAcertos.add("_ ");
+        }
+    }
+
     private void setarLabels() {
-        String palavra = JogoDaForca.getPalavra();
-        LbPalavra.setText(palavra);
+        LbPalavra.setText(palavraOculta);
         LbTentativa.setText(chutes + " tentativas de " + numeroTentativas);
     }
 
